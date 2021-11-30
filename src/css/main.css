@@ -1,0 +1,168 @@
+/**************************************************
+		Content
+ **************************************************
+
+	01. Browser Reset
+	02. Basic styles
+	03. Basic wireframe
+
+
+
+/**************************************************
+	01. Browser Reset
+ **************************************************/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center, ol, ul, li, fieldset, form, label, caption, tr, th, td, canvas, embed, 
+figure, figcaption, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+
+figcaption, figure {
+	display: block;
+}
+
+blockquote:before, blockquote:after, q:before, q:after {
+	content: '';
+	content: none;
+}
+
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+
+
+/**************************************************
+	02. Basic Styles
+ **************************************************/
+
+* {
+	box-sizing: border-box;
+}
+
+html {
+	--vw:			        1vw;
+	--vh:			        1vh;
+
+	--font:  				Helvetica Neue, Helvetica, Arial, sans-serif;
+
+	--colorPrimary:			#000000;
+	--colorBackground: 		#FFFFFF;
+}
+
+html, body {
+	margin: 0px;
+	padding: 0px;
+	min-width: 100%;
+	min-height: 100%;
+	font-family: var(--font);
+
+	-webkit-tap-highlight-color: transparent;
+}
+
+body {
+	position: relative;
+
+	color: var(--colorPrimary);
+	background: var(--colorBackground);
+	
+	-webkit-text-size-adjust: none;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	hanging-punctuation: force-end;
+	word-wrap: break-word;
+
+	-webkit-hyphens: auto;
+	-webkit-hyphenate-limit-before: 3;
+	-webkit-hyphenate-limit-after: 3;
+	-webkit-hyphenate-limit-chars: 6 3 3;
+	-webkit-hyphenate-limit-lines: 2;
+	-webkit-hyphenate-limit-last: always;
+	-webkit-hyphenate-limit-zone: 8%;
+
+	-moz-hyphens: auto;
+	-moz-hyphenate-limit-chars: 6 3 3;
+	-moz-hyphenate-limit-lines: 2;
+	-moz-hyphenate-limit-last: always;
+	-moz-hyphenate-limit-zone: 8%;
+
+	-ms-hyphens: auto;
+	-ms-hyphenate-limit-chars: 6 3 3;
+	-ms-hyphenate-limit-lines: 2;
+	-ms-hyphenate-limit-last: always;
+	-ms-hyphenate-limit-zone: 8%;
+
+	hyphens: auto;
+	hyphenate-limit-chars: 6 3 3;
+	hyphenate-limit-lines: 2;
+	hyphenate-limit-last: always;
+	hyphenate-limit-zone: 8%;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	-webkit-column-break-after: avoid;
+	-moz-column-break-after: avoid;
+	break-after: avoid;
+}
+
+p {
+	margin-bottom: 1.1em;
+	hanging-punctuation: force-end;
+}
+
+p:last-child, p:empty {
+	margin-bottom: 0;
+}
+
+a {
+	text-decoration: none;
+}
+
+a, a:link, a:active, a:visited, a:focus {
+	color: var(--colorSecondary);
+}
+
+a:hover {
+	outline: none;
+}
+
+
+.is-light           { font-weight: 300; }
+.is-regular, body   { font-weight: 400; }
+.is-bold, strong, b { font-weight: 500; }
+
+
+.tiny                           { font-size:  8px; line-height: 1.6; letter-spacing: 0.2px; }
+.alpha, .cta                    { font-size: 11px; line-height: 1.6; letter-spacing: 0.3px; }
+.beta                           { font-size: 13px; line-height: 1.6; letter-spacing: 0.4px; }
+.gamma, .content h6, html, body { font-size: 18px; line-height: 1.6; letter-spacing: 0.4px; }
+.delta, .content h5             { font-size: 22px; line-height: 1.6; letter-spacing: 0.3px; }
+
+
+@media (min-width: 800px) {
+	.tiny                           { font-size:  8px; line-height: 1.6; letter-spacing: 0.2px; }
+	.alpha, .cta                    { font-size: 11px; line-height: 1.6; letter-spacing: 0.3px; }
+	.beta                           { font-size: 13px; line-height: 1.6; letter-spacing: 0.4px; }
+	.gamma, .content h6, html, body { font-size: 18px; line-height: 1.6; letter-spacing: 0.4px; }
+	.delta, .content h5             { font-size: 22px; line-height: 1.6; letter-spacing: 0.3px; }
+}
+
+
+
+/**************************************************
+	03. Basic wireframe
+ **************************************************/
+
+.wrapper {
+}
