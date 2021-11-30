@@ -146,12 +146,12 @@ a:hover {
 
 
 .tiny              { font-size:  8px; line-height: 1.6; letter-spacing: 0.2px; }
-.alpha, html, body { font-size: 11px; line-height: 1.6; letter-spacing: 0.3px; }
+.alpha, html, body { font-size: 13px; line-height: 1.6; letter-spacing: 0.3px; }
 
 
 @media (min-width: 800px) {
 	.tiny              { font-size:  8px; line-height: 1.6; letter-spacing: 0.2px; }
-	.alpha, html, body { font-size: 11px; line-height: 1.6; letter-spacing: 0.3px; }
+	.alpha, html, body { font-size: 13px; line-height: 1.6; letter-spacing: 0.3px; }
 }
 
 
@@ -179,10 +179,33 @@ a:hover {
 	position: absolute;
 	top: var(--wrapperPad);
 	right: var(--wrapperPad);
+	max-height: calc(100 * var(--vh) - 2 * var(--wrapperPad));
+	overflow: scroll;
 	z-index: 2;
 
 	padding: 10px;
 	background-color: var(--colorBackgroundTransparent);
+}
+
+.controls .settings {
+	position: relative;
+}
+
+.controls .settings-toggle {
+	cursor: pointer;
+	user-select: none;
+}
+
+.controls .settings .settings-inner {
+	position: absolute;
+	opacity: 0;
+	pointer-events: none;
+}
+
+.controls .settings.show-settings .settings-inner {
+	position: static;
+	opacity: 1;
+	pointer-events: all;
 }
 
 .controls .setting {
@@ -196,13 +219,23 @@ a:hover {
 }
 
 .controls .setting-inner {
-	min-width: 9.4rem;
+	min-width: 13.4rem;
 	text-align: right;
 }
 
-.controls .repeater-single {
+.controls .repeater-elements .repeater-single {
 	display: flex;
 	align-items: center;
+	margin-bottom: 0.4rem;
+}
+
+.controls .repeater-elements .repeater-single:last-child {
+	margin-bottom: 0.6rem;
+}
+
+.controls .setting-warps .repeater-single {
+	flex-wrap: wrap;
+	max-width: 13.4rem;
 }
 
 .controls .repeater-single.repeater-template {
@@ -224,13 +257,19 @@ a:hover {
 }
 
 .controls .setting label {
+	display: inline-block;
 	min-width: 8rem;
 	margin-right: 1rem;
 }
 
-.controls .setting input[type="number"] {
+.controls .setting .repeater-single label {
+	min-width: 3.4rem;
+}
+
+.controls .setting input[type="number"],
+.controls .setting input[type="text"] {
 	appearance: none;
-	width: 4rem;
+	width: 100%;
 	padding: 0;
 
 	border: 0;
@@ -244,8 +283,14 @@ a:hover {
 	transition: border-bottom-color 0.2s ease;
 }
 
+.controls .setting input[type="text"]:not(#seed) {
+	width: 8.6rem;
+}
+
 .controls .setting input[type="number"]:hover,
-.controls .setting input[type="number"]:focus {
+.controls .setting input[type="number"]:focus,
+.controls .setting input[type="text"]:hover,
+.controls .setting input[type="text"]:focus {
 	border-bottom-color: var(--colorHighlight);
 	outline: 0;
 }
@@ -275,7 +320,7 @@ a:hover {
 	padding: 0.1rem 0.3rem 0.2rem;
 
 	border: 1px solid currentColor;
-	border-radius: 0;
+	border-radius: 0.2rem;
 
 	background-color: var(--colorBackground);
 	color: var(--colorPrimary);
@@ -292,5 +337,49 @@ a:hover {
 .controls .actions input[type="button"]:focus {
 	color: var(--colorHighlight);
 	outline: 0;
+}
+
+.controls .tooltip {
+	position: relative;
+	display: inline-block;
+	width: 1rem;
+	height: 1rem;
+	margin-left: 0.2rem;
+	vertical-align: super;
+	cursor: pointer;
+}
+
+.controls .tooltip:before {
+	content: '';
+	display: block;
+	position: absolute;
+	top: 0.05rem;
+	left: -0.325rem;
+	width: 1.1rem;
+	height: 1.1rem;
+	border: 1px solid var(--colorPrimary);
+	border-radius: 50%;
+}
+
+.controls .tooltip:after {
+	content: attr(data-description);
+	display: block;
+	position: absolute;
+	top: -0.2rem;
+	left: -0.325rem;
+	width: max-content;
+	max-width: 14rem;
+	padding: 0.2rem;
+	background-color: var(--colorBackground);
+	border-radius: 0.2rem;
+	font-size: 0.8rem;
+
+	transition: opacity 0.2s ease;
+	opacity: 0;
+	pointer-events: none;
+}
+
+.controls .tooltip:hover:after {
+	opacity: 1;
 }
 
