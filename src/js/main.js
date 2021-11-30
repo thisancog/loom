@@ -246,7 +246,6 @@
 				seedString += chars.charAt(Math.floor(Math.random() * chars.length));
 			}
 
-
 			seedInput.value = seedString; // hacky but I don't care, it's late
 			resetLoom();
 		}
@@ -318,6 +317,7 @@
 
 			/***************************************
 				Warps: horizontal threads
+				ToDo: flip direction on each row
 			***************************************/
 
 			class Warp {
@@ -447,7 +447,7 @@
 		var generateRandomColorSet = function(PRNG) {
 			let hue        = parseInt(lerp(PRNG(), 0, 359)),
 				schemes    = ['mono', 'contrast', 'triade', 'tetrade', 'analogic'],
-				variations = ['default', 'pastel', 'soft', 'light', 'hard', 'pale'],
+				variations = ['default', 'pastel', 'soft', 'light', 'pale'],
 				scheme     = schemes[parseInt(lerp(PRNG(), 0, schemes.length - 1))],
 				variation  = variations[parseInt(lerp(PRNG(), 0, variations.length - 1))],
 				colorSet   = new ColorScheme();
