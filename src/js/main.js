@@ -52,6 +52,7 @@
 			removeWarpBtns  = [].slice.call(controls.querySelectorAll('.setting-warps .remove-btn')),
 			seedInput       = controls.querySelector('#seed'),
 			generateBtn     = controls.querySelector('#generate'),
+			luckyBtn        = controls.querySelector('#lucky'),
 			downloadBtn     = controls.querySelector('#download'),
 			args, p5Sketch;
 
@@ -67,6 +68,7 @@
 			);
 
 			generateBtn.addEventListener(   'click', resetLoom);
+			luckyBtn.addEventListener(      'click', luckyMode);
 			downloadBtn.addEventListener(   'click', saveFrame);
 			controls.addEventListener(     'submit', resetLoom);
 		}
@@ -77,10 +79,8 @@
 		}
 
 		var resetLoom = function(e) {
-			e.preventDefault();
-
-			if (p5Sketch)
-				p5Sketch.remove();
+			if (e)			e.preventDefault();
+			if (p5Sketch)	p5Sketch.remove();
 
 			initLoom();
 		}
@@ -116,7 +116,7 @@
 			};
 		}
 
-		var generateFromString = function(value) {
+		var generateFromString = function(seed) {
 			let threadWidthInput   = document.querySelector('#thread-width'),
 				threadSpacingInput = document.querySelector('#thread-spacing'),
 				patternWidth       = document.querySelector('#pattern-width');
@@ -126,13 +126,11 @@
 			document.querySelector('.setting-warps .repeater-elements').innerHTML = '';
 
 
-			let getRandomNumber = xmur3(value),
+			let getRandomNumber = xmur3(seed),
 				numWefts        = parseInt(lerp(getRandomNumber(), 1, 50)),
 				numWarps        = parseInt(lerp(getRandomNumber(), 1, 50)),
 				threadWidth     = parseInt(lerp(getRandomNumber(), 1, 50)),
 				colors          = generateRandomColorSet(getRandomNumber);
-
-			console.log(colors);
 
 			threadWidthInput.value   = threadWidth;
 			threadSpacingInput.value = parseInt(lerp(getRandomNumber(), 0, 0.5 * threadWidth));
@@ -217,6 +215,20 @@
 
 		var toggleSettings = function() {
 			settings.classList.toggle('show-settings');
+		}
+
+		var luckyMode = function() {
+			var seedLength = parseInt(lerp(Math.random(), 1, 100)),
+				seedString = '',
+    			chars      = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+			for (var i = 0; i < seedLength; i++) {
+				seedString += chars.charAt(Math.floor(Math.random() * chars.length));
+			}
+
+
+			seedInput.value = seedString; // hacky but I don't care, it's late
+			resetLoom();
 		}
 
 

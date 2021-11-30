@@ -316,7 +316,7 @@ a:hover {
 .controls .actions input[type="submit"],
 .controls .actions input[type="button"] {
 	appearance: none;
-	width: calc(50% - 0.5rem);
+	width: calc(33.333% - 0.333rem);
 	padding: 0.1rem 0.3rem 0.2rem;
 
 	border: 1px solid currentColor;
@@ -329,6 +329,10 @@ a:hover {
 	cursor: pointer;
 	user-select: none;
 	transition: color 0.2s ease;
+}
+
+.controls .actions input + input {
+	margin-left: 0.5rem;
 }
 
 .controls .actions input[type="submit"]:hover,
