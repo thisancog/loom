@@ -405,7 +405,7 @@
 		}
 
 		registerEvents();
-		initLoom();
+		luckyMode();
 	}
 
 
