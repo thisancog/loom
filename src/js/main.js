@@ -56,6 +56,19 @@
 			downloadBtn     = controls.querySelector('#download'),
 			args, p5Sketch;
 
+		// some fixed variables to tweak behaviour
+		var maxNumWefts                   = 50,
+			maxNumWarps                   = 50,
+			maxThreadWidth                = 20,
+			patternWidthMinMultiplier     = 3,			// lower boundary for the pattern width, n * wefts number
+			patternWidthMaxMultiplier     = 10,			// upper boundary for the pattern width, n * wefts number
+			perlinWavelengthMinMultiplier = 0.05,		// [0, 1[ lower boundary for the Perlin Noise wavelength for the warp length
+			perlinWavelengthMaxMultiplier = 0.25,		// ]0, 1] upper boundary for the Perlin Noise wavelength for the warp length
+			patternLengthMin              = 4,
+			patternLengthMax              = 200;
+
+
+
 		var registerEvents = function() {
 			settingsToggle.addEventListener('click', toggleSettings);
 			addWeftBtn.addEventListener(    'click', addWeft);
@@ -127,11 +140,11 @@
 
 
 			let getRandomNumber = xmur3(seed),
-				numWefts        = parseInt(lerp(getRandomNumber(), 1, 50)),
-				numWarps        = parseInt(lerp(getRandomNumber(), 1, 50)),
-				threadWidth     = parseInt(lerp(getRandomNumber(), 1, 20)),
+				numWefts        = parseInt(lerp(getRandomNumber(), 1, maxNumWefts)),
+				numWarps        = parseInt(lerp(getRandomNumber(), 1, maxNumWarps)),
+				threadWidth     = parseInt(lerp(getRandomNumber(), 1, maxThreadWidth)),
 				threadSpacing   = parseInt(lerp(getRandomNumber(), 0, 0.5 * threadWidth)),
-				patternWidth    = parseInt(lerp(getRandomNumber(), 3 * numWefts, 10 * numWefts)),
+				patternWidth    = parseInt(lerp(getRandomNumber(), patternWidthMinMultiplier * numWefts, patternWidthMaxMultiplier * numWefts)),
 				colors          = generateRandomColorSet(getRandomNumber);
 
 			threadWidthInput.value   = threadWidth;
@@ -145,8 +158,8 @@
 
 			for (let i = 0; i < numWarps; i++) {
 				let newColor         = colors[parseInt(lerp(getRandomNumber(), 0, colors.length - 1))],
-					patternLength    = parseInt(lerp(getRandomNumber(), 4, 200)),
-					perlinWavelength = Math.floor(patternWidth * lerp(getRandomNumber(), 0.05, 0.25)),
+					patternLength    = parseInt(lerp(getRandomNumber(), patternLengthMin, patternLengthMax)),
+					perlinWavelength = Math.floor(patternWidth * lerp(getRandomNumber(), perlinWavelengthMinMultiplier, perlinWavelengthMaxMultiplier)),
 					patternPerlin    = perlin1D(getRandomNumber(), perlinWavelength),
 					newPattern       = '';
 
@@ -215,8 +228,8 @@
 				padThis  = n => n.toString().padStart(2, '0'),
 				fileName = seedInput.value.length > 0
 						 ? 'loom_seed_' + seedInput.value
-						 : 'loom_' + now.getFullYear() + '-' + padThis(now.getMonth() + 1) + '-' + padThis(now.getDate())
-						 + ' ' + padThis(now.getHours()) + '-' + padThis(now.getMinutes()) + '-' + padThis(now.getSeconds());
+						 : 'loom_'   + now.getFullYear() + '-' + padThis(now.getMonth() + 1) + '-' + padThis(now.getDate())
+						 + ' ' + padThis(now.getHours()) + '-' + padThis(now.getMinutes())   + '-' + padThis(now.getSeconds());
 			p5Sketch.save(fileName + '.jpg');
 		}
 
