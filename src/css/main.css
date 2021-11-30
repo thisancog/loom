@@ -383,3 +383,15 @@ a:hover {
 	opacity: 1;
 }
 
+
+
+.disclaimer {
+	position: absolute;
+	bottom: var(--wrapperPad);
+	right: var(--wrapperPad);
+	z-index: 2;
+
+	padding: 2px 10px;
+	background-color: var(--colorBackgroundTransparent);
+	line-height: 1;
+}
