@@ -129,19 +129,22 @@
 			let getRandomNumber = xmur3(value),
 				numWefts        = parseInt(lerp(getRandomNumber(), 1, 50)),
 				numWarps        = parseInt(lerp(getRandomNumber(), 1, 50)),
-				threadWidth     = parseInt(lerp(getRandomNumber(), 1, 50));
+				threadWidth     = parseInt(lerp(getRandomNumber(), 1, 50)),
+				colors          = generateRandomColorSet(getRandomNumber);
+
+			console.log(colors);
 
 			threadWidthInput.value   = threadWidth;
 			threadSpacingInput.value = parseInt(lerp(getRandomNumber(), 0, 0.5 * threadWidth));
 			patternWidth.value       = parseInt(lerp(getRandomNumber(), 1, 999));
 
 			for (let i = 0; i < numWefts; i++) {
-				let newColor = generateRandomColor(getRandomNumber);
+				let newColor = colors[parseInt(lerp(getRandomNumber(), 0, colors.length - 1))];
 				addWeft(newColor);
 			}
 
 			for (let i = 0; i < numWarps; i++) {
-				let newColor      = generateRandomColor(getRandomNumber),
+				let newColor      = colors[parseInt(lerp(getRandomNumber(), 0, colors.length - 1))],
 					patternLength = parseInt(lerp(getRandomNumber(), 4, 200)),
 					newPattern    = '';
 
@@ -373,11 +376,20 @@
 			}
 		}
 
-		var generateRandomColor = function(PRNG) {
-			let r = parseInt(lerp(PRNG(), 0, 255)),
-				g = parseInt(lerp(PRNG(), 0, 255)),
-				b = parseInt(lerp(PRNG(), 0, 255));
-			return '#' + r.toString(16) + g.toString(16) + b.toString(16);
+		var generateRandomColorSet = function(PRNG) {
+			let hue        = parseInt(lerp(PRNG(), 0, 359)),
+				schemes    = ['mono', 'contrast', 'triade', 'tetrade', 'analogic'],
+				variations = ['default', 'pastel', 'soft', 'light', 'hard', 'pale'],
+				scheme     = schemes[parseInt(lerp(PRNG(), 0, schemes.length - 1))],
+				variation  = variations[parseInt(lerp(PRNG(), 0, variations.length - 1))],
+				colorSet   = new ColorScheme();
+
+			colorSet.from_hue(hue).scheme(scheme);
+			if (['triade', 'tetrade', 'analogic'].indexOf(scheme) > -1)
+				colorSet.distance(lerp(PRNG(), 0.25, 0.5));
+			
+			let colors = colorSet.variation(variation).colors();
+			return colors.map(color => '#' + color);
 		}
 
 		registerEvents();
