@@ -211,7 +211,9 @@
 		var saveFrame = function() {
 			let now      = new Date(),
 				padThis  = n => n.toString().padStart(2, '0'),
-				fileName = 'loom_' + now.getFullYear() + '-' + padThis(now.getMonth() + 1) + '-' + padThis(now.getDate())
+				fileName = seedInput.value.length > 0
+						 ? 'loom_seed_' + seedInput.value
+						 : 'loom_' + now.getFullYear() + '-' + padThis(now.getMonth() + 1) + '-' + padThis(now.getDate())
 						 + ' ' + padThis(now.getHours()) + '-' + padThis(now.getMinutes()) + '-' + padThis(now.getSeconds());
 			p5Sketch.save(fileName + '.jpg');
 		}
