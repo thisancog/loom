@@ -134,7 +134,7 @@
 
 			threadWidthInput.value   = threadWidth;
 			threadSpacingInput.value = parseInt(lerp(getRandomNumber(), 0, 0.5 * threadWidth));
-			patternWidth.value       = parseInt(lerp(getRandomNumber(), 1, 999));
+			patternWidth.value       = parseInt(lerp(getRandomNumber(), 3 * numWefts, 10 * numWefts));
 
 			for (let i = 0; i < numWefts; i++) {
 				let newColor = colors[parseInt(lerp(getRandomNumber(), 0, colors.length - 1))];
@@ -144,10 +144,11 @@
 			for (let i = 0; i < numWarps; i++) {
 				let newColor      = colors[parseInt(lerp(getRandomNumber(), 0, colors.length - 1))],
 					patternLength = parseInt(lerp(getRandomNumber(), 4, 200)),
+					patternPerlin = perlin1D(getRandomNumber()),
 					newPattern    = '';
 
 				for (let n = 0; n < patternLength; n++) {
-					newPattern = newPattern + (getRandomNumber() < 0.5 ? '0' : '1');
+					newPattern = newPattern + (patternPerlin() < 0.5 ? '0' : '1');
 				}
 
 				addWarp(newColor, newPattern);
@@ -208,8 +209,9 @@
 
 		var saveFrame = function() {
 			let now      = new Date(),
-				fileName = 'loom_' + now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDate()
-						 + ' ' + now.getHours() + '-' + now.getMinutes() + '-' + now.getSeconds();
+				padThis  = n => n.toString().padStart(2, '0'),
+				fileName = 'loom_' + now.getFullYear() + '-' + padThis(now.getMonth() + 1) + '-' + padThis(now.getDate())
+						 + ' ' + padThis(now.getHours()) + '-' + padThis(now.getMinutes()) + '-' + padThis(now.getSeconds());
 			p5Sketch.save(fileName + '.jpg');
 		}
 
@@ -385,6 +387,43 @@
 				h = Math.imul(h ^ h >>> 13, 3266489909);
 				h = (h ^= h >>> 16) >>> 0;
 				return h / Math.pow(10, h.toString().length);
+			}
+		}
+
+		var perlin1D = function(seed) {
+			let M          = 1853020188851841,	// 3^30
+			    A          = 14348908,	        // A - 1 has to be divisible by M's prime factors (3^15 + 1)
+			    C          = 11, 			    // C and M are co-prime,
+				Z          = Math.floor(seed * M),
+				randomNum  = function() {
+					Z = (A * Z + C) % M;
+					return Z / M - 0.5;
+				},
+				h          = 1,
+				x          = 0,
+				y          = h / 2,
+				amplitude  = 100, 				// amplitude
+				wavelength = 100, 				// wavelength
+				a          = randomNum(),
+				b          = randomNum();
+
+			var interpolate = function(pa, pb, px) {
+				var ft = px * Math.PI,
+					f = (1 - Math.cos(ft)) * 0.5;
+				return pa * (1 - f) + pb * f;
+			}
+
+			return function() {
+				if (x % wavelength === 0) {
+					a = b;
+					b = randomNum();
+					y = h / 2 + a * amplitude;
+				} else {
+					y = h / 2 + interpolate(a, b, (x % wavelength) / wavelength) * amplitude;
+				}
+				
+				x += 1;
+				return y;
 			}
 		}
 

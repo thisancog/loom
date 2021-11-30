@@ -145,12 +145,12 @@ a:hover {
 .is-bold, strong, b { font-weight: 500; }
 
 
-.tiny              { font-size:  8px; line-height: 1.6; letter-spacing: 0.2px; }
+.tiny              { font-size: 10px; line-height: 1.6; letter-spacing: 0.2px; }
 .alpha, html, body { font-size: 13px; line-height: 1.6; letter-spacing: 0.3px; }
 
 
 @media (min-width: 800px) {
-	.tiny              { font-size:  8px; line-height: 1.6; letter-spacing: 0.2px; }
+	.tiny              { font-size: 10px; line-height: 1.6; letter-spacing: 0.2px; }
 	.alpha, html, body { font-size: 13px; line-height: 1.6; letter-spacing: 0.3px; }
 }
 
