@@ -119,7 +119,7 @@
 		var generateFromString = function(seed) {
 			let threadWidthInput   = document.querySelector('#thread-width'),
 				threadSpacingInput = document.querySelector('#thread-spacing'),
-				patternWidth       = document.querySelector('#pattern-width');
+				patternWidthInput  = document.querySelector('#pattern-width');
 
 			//	clear everything
 			document.querySelector('.setting-wefts .repeater-elements').innerHTML = '';
@@ -129,12 +129,14 @@
 			let getRandomNumber = xmur3(seed),
 				numWefts        = parseInt(lerp(getRandomNumber(), 1, 50)),
 				numWarps        = parseInt(lerp(getRandomNumber(), 1, 50)),
-				threadWidth     = parseInt(lerp(getRandomNumber(), 1, 50)),
+				threadWidth     = parseInt(lerp(getRandomNumber(), 1, 20)),
+				threadSpacing   = parseInt(lerp(getRandomNumber(), 0, 0.5 * threadWidth)),
+				patternWidth    = parseInt(lerp(getRandomNumber(), 3 * numWefts, 10 * numWefts)),
 				colors          = generateRandomColorSet(getRandomNumber);
 
 			threadWidthInput.value   = threadWidth;
-			threadSpacingInput.value = parseInt(lerp(getRandomNumber(), 0, 0.5 * threadWidth));
-			patternWidth.value       = parseInt(lerp(getRandomNumber(), 3 * numWefts, 10 * numWefts));
+			threadSpacingInput.value = threadSpacing;
+			patternWidthInput.value  = patternWidth;
 
 			for (let i = 0; i < numWefts; i++) {
 				let newColor = colors[parseInt(lerp(getRandomNumber(), 0, colors.length - 1))];
@@ -144,7 +146,7 @@
 			for (let i = 0; i < numWarps; i++) {
 				let newColor         = colors[parseInt(lerp(getRandomNumber(), 0, colors.length - 1))],
 					patternLength    = parseInt(lerp(getRandomNumber(), 4, 200)),
-					perlinWavelength = Math.floor(threadWidth * lerp(getRandomNumber(), 0.1, 0.5)),
+					perlinWavelength = Math.floor(patternWidth * lerp(getRandomNumber(), 0.05, 0.25)),
 					patternPerlin    = perlin1D(getRandomNumber(), perlinWavelength),
 					newPattern       = '';
 
