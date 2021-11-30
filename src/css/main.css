@@ -54,9 +54,8 @@ table {
 html {
 	--vw:			        1vw;
 	--vh:			        1vh;
-
+	--wrapperPad:           10px;
 	--font:  				Helvetica Neue, Helvetica, Arial, sans-serif;
-
 	--colorPrimary:			#000000;
 	--colorBackground: 		#FFFFFF;
 }
@@ -143,19 +142,13 @@ a:hover {
 .is-bold, strong, b { font-weight: 500; }
 
 
-.tiny                           { font-size:  8px; line-height: 1.6; letter-spacing: 0.2px; }
-.alpha, .cta                    { font-size: 11px; line-height: 1.6; letter-spacing: 0.3px; }
-.beta                           { font-size: 13px; line-height: 1.6; letter-spacing: 0.4px; }
-.gamma, .content h6, html, body { font-size: 18px; line-height: 1.6; letter-spacing: 0.4px; }
-.delta, .content h5             { font-size: 22px; line-height: 1.6; letter-spacing: 0.3px; }
+.tiny              { font-size:  8px; line-height: 1.6; letter-spacing: 0.2px; }
+.alpha, html, body { font-size: 11px; line-height: 1.6; letter-spacing: 0.3px; }
 
 
 @media (min-width: 800px) {
-	.tiny                           { font-size:  8px; line-height: 1.6; letter-spacing: 0.2px; }
-	.alpha, .cta                    { font-size: 11px; line-height: 1.6; letter-spacing: 0.3px; }
-	.beta                           { font-size: 13px; line-height: 1.6; letter-spacing: 0.4px; }
-	.gamma, .content h6, html, body { font-size: 18px; line-height: 1.6; letter-spacing: 0.4px; }
-	.delta, .content h5             { font-size: 22px; line-height: 1.6; letter-spacing: 0.3px; }
+	.tiny              { font-size:  8px; line-height: 1.6; letter-spacing: 0.2px; }
+	.alpha, html, body { font-size: 11px; line-height: 1.6; letter-spacing: 0.3px; }
 }
 
 
@@ -165,4 +158,28 @@ a:hover {
  **************************************************/
 
 .wrapper {
+	position: relative;
+	width: calc(100 * var(--vw));
+	height: calc(100 * var(--vh));
+	padding: var(--wrapperPad);
+	background-color: var(--colorBackground);
+	overflow: hidden;
+}
+
+.sketch-container,
+.sketch-container canvas {
+	width: 100%;
+	height: 100%;
+	cursor: pointer;
+}
+
+.controls {
+	position: absolute;
+	top: var(--wrapperPad);
+	right: var(--wrapperPad);
+	z-index: 2;
+
+	padding: 5px;
+	background-color: var(--colorBackground);
+	opacity: 0.9;
 }

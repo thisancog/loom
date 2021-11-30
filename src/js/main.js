@@ -15,6 +15,7 @@
 	var init = function() {
 		resizer           = resizeBody();
 		sketchContainer   = document.querySelector('.sketch-container');
+
 		if (sketchContainer)
 			p5Sketch          = new p5(sketch, sketchContainer);
 
@@ -53,13 +54,88 @@
 	***************************************/
 
 	var sketch = function(p) {
+
+		/* horizontal threads */
+		class Warp {
+			constructor(args) {
+				this.args = args;
+			}
+
+			weave() {
+
+			}
+		}
+
+
+		/* vertical threads */
+		class Weft {
+			constructor(args) {
+				this.args  = args;
+				this.lastY = 0;
+			}
+
+			weave(newY) {
+				p.strokeCap(p.SQUARE);
+				p.strokeWeight(this.args.width);
+				p.stroke(this.args.color);
+				p.line(this.args.x, this.lastY, this.args.x, newY);
+				this.lastY = newY;
+			}
+		}
+
+		let threadWidth   = 4,
+			threadSpacing = 1,
+			threadTotal   = threadWidth + threadSpacing,
+
+			wefts         = [],
+			weftColors    = ['#777', '#777', '#999', '#999', '#BBB', '#BBB'],
+			numWefts,
+
+			warps         = [],
+			warpColors    = ['#777', '#777', '#999', '#999', '#BBB', '#BBB'];
+
+		let	currentWarp   = 0,
+			currentWeft   = 0;
+
+
+		var saveFrame = function() {
+			let now      = new Date(),
+				fileName = 'loom_' + now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDate()
+						 + ' ' + now.getHours() + '-' + now.getMinutes() + '-' + now.getSeconds();
+			p.save(fileName + '.jpg');
+		}
+
 		p.setup = function() {
-			createCanvas(400, 400);
+			p.createCanvas(sketchContainer.clientWidth, sketchContainer.clientHeight);
+			sketchContainer.addEventListener('click', saveFrame);
+			numWefts = Math.floor(p.width / threadTotal);
+
+			for (let i = 0; i < numWefts; i++) {
+				wefts.push(new Weft({
+					x:    		i * threadTotal,
+					color:		weftColors[i % weftColors.length],
+					width:		threadWidth
+				}));
+			}
+
+			for (let i = 0; i < warpColors.length; i++) {
+				warps.push(new Warp({
+					y: 			i * threadTotal,
+					color:  	warpColors[i],
+					width:  	threadWidth,
+					pattern:	[ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
+				}));
+			}
+
+			p.background(255);
 		}
 
 		p.draw = function() {
-			background(220);
-			ellipse(50, 50, 80, 80);
+			if (currentWarp > p.height)
+				return p.noLoop();
+
+			wefts.forEach(weft => weft.weave(currentWarp))
+			currentWarp += threadTotal;
 		}
 	}
 
