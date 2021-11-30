@@ -22,9 +22,67 @@
 
 	<div class="wrapper">
 		<div class="sketch-container"></div>
-		<div class="controls">
-			<span class="save-disclaimer">Click on tapestry to download</span>
-		</div>
+		<form class="controls">
+			<div class="setting">
+				<label for="thread-width">Thread thickness</label>
+				<div class="setting-inner">
+					<input type="number" class="alpha" min="1" max="50" id="thread-width" value="8" />
+				</div>
+			</div>
+			<div class="setting">
+				<label for="thread-spacing">Thread spacing</label>
+				<div class="setting-inner">
+					<input type="number" class="alpha" min="0" max="20" id="thread-spacing" value="2" />
+				</div>
+			</div>
+			<div class="setting">
+				<label for="pattern-width">Pattern width</label>
+				<div class="setting-inner">
+					<input type="number" class="alpha" min="1" max="99999" id="pattern-width" value="8" />
+				</div>
+			</div>
+			<div class="setting setting-repeater setting-wefts">
+				<label>Wefts</label>
+				<div class="setting-inner repeater-inner">
+					<div class="repeater-elements">
+						<div class="repeater-single">
+							<input type="color" value="#777777" />
+							<span class="remove-btn">Remove</span>
+						</div>
+						<div class="repeater-single">
+							<input type="color" value="#777777" />
+							<span class="remove-btn">Remove</span>
+						</div>
+						<div class="repeater-single">
+							<input type="color" value="#999999" />
+							<span class="remove-btn">Remove</span>
+						</div>
+						<div class="repeater-single">
+							<input type="color" value="#999999" />
+							<span class="remove-btn">Remove</span>
+						</div>
+						<div class="repeater-single">
+							<input type="color" value="#BBBBBB" />
+							<span class="remove-btn">Remove</span>
+						</div>
+						<div class="repeater-single">
+							<input type="color" value="#BBBBBB" />
+							<span class="remove-btn">Remove</span>
+						</div>
+					</div>
+					<div class="repeater-add add-weft-btn">New</div>
+					<div class="repeater-single repeater-template">
+						<input type="color" value="#000000" />
+						<span class="remove-btn">Remove</span>
+					</div>
+				</div>
+			</div>
+
+			<div class="actions">
+				<input type="submit" class="alpha" id="generate" value="Generate" />
+				<input type="button" class="alpha" id="download" value="Download" />
+			</div>
+		</form>
 	</div>
 </body>
 </html>
