@@ -142,10 +142,11 @@
 			}
 
 			for (let i = 0; i < numWarps; i++) {
-				let newColor      = colors[parseInt(lerp(getRandomNumber(), 0, colors.length - 1))],
-					patternLength = parseInt(lerp(getRandomNumber(), 4, 200)),
-					patternPerlin = perlin1D(getRandomNumber()),
-					newPattern    = '';
+				let newColor         = colors[parseInt(lerp(getRandomNumber(), 0, colors.length - 1))],
+					patternLength    = parseInt(lerp(getRandomNumber(), 4, 200)),
+					perlinWavelength = Math.floor(threadWidth * lerp(getRandomNumber(), 0.1, 0.5)),
+					patternPerlin    = perlin1D(getRandomNumber(), perlinWavelength),
+					newPattern       = '';
 
 				for (let n = 0; n < patternLength; n++) {
 					newPattern = newPattern + (patternPerlin() < 0.5 ? '0' : '1');
@@ -390,7 +391,7 @@
 			}
 		}
 
-		var perlin1D = function(seed) {
+		var perlin1D = function(seed, wavelength) {
 			let M          = 1853020188851841,	// 3^30
 			    A          = 14348908,	        // A - 1 has to be divisible by M's prime factors (3^15 + 1)
 			    C          = 11, 			    // C and M are co-prime,
@@ -403,7 +404,6 @@
 				x          = 0,
 				y          = h / 2,
 				amplitude  = 100, 				// amplitude
-				wavelength = 100, 				// wavelength
 				a          = randomNum(),
 				b          = randomNum();
 
