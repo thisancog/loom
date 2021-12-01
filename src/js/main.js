@@ -57,15 +57,15 @@
 			args, p5Sketch;
 
 		// some fixed variables to tweak behaviour
-		var maxNumWefts                   = 50,
-			maxNumWarps                   = 50,
+		var maxNumWefts                   = 20,
+			maxNumWarps                   = 20,
 			maxThreadWidth                = 20,
 			patternWidthMinMultiplier     = 3,			// lower boundary for the pattern width, n * wefts number
 			patternWidthMaxMultiplier     = 10,			// upper boundary for the pattern width, n * wefts number
-			perlinWavelengthMinMultiplier = 0.05,		// [0, 1[ lower boundary for the Perlin Noise wavelength for the warp length
-			perlinWavelengthMaxMultiplier = 0.25,		// ]0, 1] upper boundary for the Perlin Noise wavelength for the warp length
+			perlinWavelengthMinMultiplier = 0.02,		// [0, 1[ lower boundary for the Perlin Noise wavelength for the warp length
+			perlinWavelengthMaxMultiplier = 0.20,		// ]0, 1] upper boundary for the Perlin Noise wavelength for the warp length
 			patternLengthMin              = 4,
-			patternLengthMax              = 200;
+			patternLengthMax              = 50;
 
 
 
