@@ -71,6 +71,14 @@
 					perlinWavelengthMaxMultiplier:	0.20,		// ]0, 1] upper boundary for the Perlin Noise wavelength for the warp length
 					patternLengthMin: 				4,
 					patternLengthMax:				50
+				},
+				linear: {
+					numWeftsMinPower2:				1,
+					numWeftsMaxPower2:				5,
+					threadSpacingMinMultiplier:		0.1,
+					threadSpacingMaxMultiplier:		0.2,
+					patternWidthMinMultiplier:		1,
+					patternWidthMaxMultiplier:		10,
 				}
 			};
 
@@ -109,9 +117,9 @@
 			if (seedInput.value.length > 0)
 				generateFromString(seedInput.value);
 
-			let threadWidth   = parseFloat(document.querySelector('#thread-width').value),
-				threadSpacing = parseFloat(document.querySelector('#thread-spacing').value),
-				patternWidth  = parseInt(document.querySelector('#pattern-width').value);
+			let threadWidth   = parseFloat(threadWidthInput.value),
+				threadSpacing = parseFloat(threadSpacingInput.value),
+				patternWidth  = parseInt(patternWidthInput.value);
 
 			let weftColors    = [].slice.call(controls.querySelectorAll('.setting-wefts .repeater-elements input[type="color"]'))
 								  .map(input => input.value);
@@ -190,11 +198,11 @@
 		}
 
 		var generateFromStringLinear = function(rand) {
-			let numWefts        = Math.pow(2, parseInt(lerp(rand(), 1, 5))),
+			let numWefts        = Math.pow(2, parseInt(lerp(rand(), params.linear.numWeftsMinPower2, params.linear.numWeftsMaxPower2))),
 				numWarps        = numWefts,
 				threadWidth     = 2 * numWefts,
-				threadSpacing   = numWefts * parseInt(lerp(rand(), 0.1, 0.2)),
-				patternWidth    = numWefts * parseInt(lerp(rand(), 1, 10)),
+				threadSpacing   = numWefts * parseInt(lerp(rand(), params.linear.threadSpacingMinMultiplier, params.linear.threadSpacingMaxMultiplier)),
+				patternWidth    = numWefts * parseInt(lerp(rand(), params.linear.patternWidthMinMultiplier, params.linear.patternWidthMaxMultiplier)),
 				colors          = generateRandomColorSet(rand);
 
 			threadWidthInput.value   = threadWidth;
