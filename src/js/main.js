@@ -61,6 +61,7 @@
 
 		// some fixed variables to tweak behaviour
 		var params = {
+				changeWarpDirections: 				false,
 				random: {
 					maxNumWefts:					20,
 					maxNumWarps:					20,
@@ -140,7 +141,7 @@
 				threadTotal:    threadWidth + threadSpacing,
 				patternWidth:	patternWidth,
 				weftColors: 	weftColors,
-				warpSettings:   warps 
+				warpSettings:   warps
 			};
 		}
 
@@ -158,9 +159,11 @@
 				getRandomNumber = xoshiro128ss(seeder(), seeder(), seeder(), seeder()),
 				algorithms      = [
 									generateFromStringRandom,
-									generateFromStringLinear
+									generateFromStringLinear,
+			//						generateFromStringDeitz
 								  ];
 
+		//	generateFromStringDeitz(getRandomNumber);
 			algorithms[Math.floor(getRandomNumber() * algorithms.length)](getRandomNumber);
 		}
 
@@ -227,6 +230,64 @@
 
 				addWarp(newColor, newPattern);
 			}
+		}
+
+	//	not working as intended,
+	//	work in progress
+		var generateFromStringDeitz = function(rand) {
+			let numWefts        = 1,
+				numWarps        = 1,
+				threadWidth     = 12,
+				threadSpacing   = 2,
+				colors          = generateRandomColorSet(rand),
+				numVariables    = 2,
+				variables       = Array(numVariables).fill(0).map((_, i) => String.fromCharCode(i + 97)),
+				power           = 2, // parseInt(lerp(rand(), 1, 5)),
+				multinomial     = getMultinomial(numVariables, power),
+				patternWidth    = multinomial.length; // + (parseInt(lerp(rand(), -5, 5)));
+
+			threadWidthInput.value   = threadWidth;
+			threadSpacingInput.value = threadSpacing;
+			patternWidthInput.value  = patternWidth;
+
+			console.log(multinomial);
+			// aaababbb
+
+			for (let i = 0; i < numWefts; i++) {
+				let newColor = colors[parseInt(lerp(rand(), 0, colors.length - 1))];
+				addWeft('#FFFFFF');
+			}
+
+			for (let i = 0; i < numWarps; i++) {
+				let newColor            = colors[parseInt(lerp(rand(), 0, colors.length - 1))],
+					multinomialReplaced = multinomial.split('').map(j => j == variables[i] ? 1 : 0).join('');
+
+				addWarp('#DDDDDD', multinomialReplaced);
+			}
+		}
+
+	//	naive multionimal expansion
+		var getMultinomial = function(numVariables, power) {
+			let multinomial = {},
+				factor      = Array(numVariables).fill(0).map((_, i) => String.fromCharCode(i + 97)),
+				expanded    = factor;
+
+			for (let k = 1; k < power; k++) {
+				let newExpanded = [];
+				for (let i = 0; i < numVariables; i++) {
+					for (let j = 0; j < expanded.length; j++) {
+						let newSummand = expanded[j] + String.fromCharCode(i + 97);
+						newExpanded.push(newSummand.split('').sort().join(''))
+					}
+				}
+
+				expanded = newExpanded.sort();
+			}
+
+		//	combining like terms
+			expanded.forEach(term => multinomial[term] = !multinomial.hasOwnProperty(term) ? 1 : multinomial[term] + 1);
+			multinomial = Object.entries(multinomial).map(([factor, value]) => factor.repeat(value));
+			return multinomial.join('')
 		}
 
 
@@ -359,12 +420,17 @@
 				if (currentY * args.threadTotal > p.height)
 					return p.noLoop();
 
-				let currentWarp = warps[currentWarpIndex];
+				let currentWarp = warps[currentWarpIndex],
+					direction   = Math.floor(currentY / warps.length) % 2;
 
-				for (var x = 0; x < numWefts; x++) {
-					let underOrOver = currentWarp.weave(x, currentY);
+				for (var i = 0; i < numWefts; i++) {
+					let x           = direction == 0 || !params.changeWarpDirections
+									? i
+									: numWefts - i - 1,
+						underOrOver = currentWarp.weave(i, currentY, i == 0);
+
 					if (underOrOver == 'under')
-					 	wefts[x].weave(currentY);
+					 	wefts[i].weave(currentY);
 				}
 
 				currentWarpIndex = wrapIndex(currentWarpIndex + 1, 0, args.warpSettings.length - 1);
@@ -383,8 +449,10 @@
 					this.counter         = 0;
 				}
 
-				weave(currentX, currentY) {
-					this.counter = wrapIndex(this.counter + 1, 0, this.args.pattern.length - 1);
+				weave(currentX, currentY, changeDirectionNow) {
+					this.counter = params.changeWarpDirections && changeDirectionNow
+								 ? 0
+								 : wrapIndex(this.counter + 1, 0, this.args.pattern.length - 1);
 
 				//	go under?
 					if (this.args.pattern[this.counter] == 0)
