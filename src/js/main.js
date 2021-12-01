@@ -42,30 +42,37 @@
 	***************************************/
 
 	var loom = function() {
-		var sketchContainer = document.querySelector('.sketch-container'),
-			controls        = document.querySelector('.controls'),
-			settings        = controls.querySelector('.settings'),
-			settingsToggle  = settings.querySelector('.settings-toggle'),
-			addWeftBtn      = controls.querySelector('.add-weft-btn'),
-			removeWeftBtns  = [].slice.call(controls.querySelectorAll('.setting-wefts .remove-btn')),
-			addWarpBtn      = controls.querySelector('.add-warp-btn'),
-			removeWarpBtns  = [].slice.call(controls.querySelectorAll('.setting-warps .remove-btn')),
-			seedInput       = controls.querySelector('#seed'),
-			generateBtn     = controls.querySelector('#generate'),
-			luckyBtn        = controls.querySelector('#lucky'),
-			downloadBtn     = controls.querySelector('#download'),
+		var sketchContainer    = document.querySelector('.sketch-container'),
+			controls           = document.querySelector('.controls'),
+			settings           = controls.querySelector('.settings'),
+			settingsToggle     = settings.querySelector('.settings-toggle'),
+			threadWidthInput   = document.querySelector('#thread-width'),
+			threadSpacingInput = document.querySelector('#thread-spacing'),
+			patternWidthInput  = document.querySelector('#pattern-width'),
+			addWeftBtn         = controls.querySelector('.add-weft-btn'),
+			removeWeftBtns     = [].slice.call(controls.querySelectorAll('.setting-wefts .remove-btn')),
+			addWarpBtn         = controls.querySelector('.add-warp-btn'),
+			removeWarpBtns     = [].slice.call(controls.querySelectorAll('.setting-warps .remove-btn')),
+			seedInput          = controls.querySelector('#seed'),
+			generateBtn        = controls.querySelector('#generate'),
+			luckyBtn           = controls.querySelector('#lucky'),
+			downloadBtn        = controls.querySelector('#download'),
 			args, p5Sketch;
 
 		// some fixed variables to tweak behaviour
-		var maxNumWefts                   = 20,
-			maxNumWarps                   = 20,
-			maxThreadWidth                = 20,
-			patternWidthMinMultiplier     = 3,			// lower boundary for the pattern width, n * wefts number
-			patternWidthMaxMultiplier     = 10,			// upper boundary for the pattern width, n * wefts number
-			perlinWavelengthMinMultiplier = 0.02,		// [0, 1[ lower boundary for the Perlin Noise wavelength for the warp length
-			perlinWavelengthMaxMultiplier = 0.20,		// ]0, 1] upper boundary for the Perlin Noise wavelength for the warp length
-			patternLengthMin              = 4,
-			patternLengthMax              = 50;
+		var params = {
+				random: {
+					maxNumWefts:					20,
+					maxNumWarps:					20,
+					maxThreadWidth: 				20,
+					patternWidthMinMultiplier: 		3,			// lower boundary for the pattern width, n * wefts number
+					patternWidthMaxMultiplier:		10,			// upper boundary for the pattern width, n * wefts number
+					perlinWavelengthMinMultiplier:	0.02,		// [0, 1[ lower boundary for the Perlin Noise wavelength for the warp length
+					perlinWavelengthMaxMultiplier:	0.20,		// ]0, 1] upper boundary for the Perlin Noise wavelength for the warp length
+					patternLengthMin: 				4,
+					patternLengthMax:				50
+				}
+			};
 
 
 
@@ -129,38 +136,49 @@
 			};
 		}
 
-		var generateFromString = function(seed) {
-			let threadWidthInput   = document.querySelector('#thread-width'),
-				threadSpacingInput = document.querySelector('#thread-spacing'),
-				patternWidthInput  = document.querySelector('#pattern-width');
 
-			//	clear everything
+		/***************************************
+			Pattern generation
+		***************************************/
+
+		var generateFromString = function(seed) {
+		//	clear everything
 			document.querySelector('.setting-wefts .repeater-elements').innerHTML = '';
 			document.querySelector('.setting-warps .repeater-elements').innerHTML = '';
 
+			let seeder          = xmur3(seed),
+				getRandomNumber = xoshiro128ss(seeder(), seeder(), seeder(), seeder()),
+				algorithms      = [
+									generateFromStringRandom,
+									generateFromStringLinear
+								  ];
 
-			let getRandomNumber = xmur3(seed),
-				numWefts        = parseInt(lerp(getRandomNumber(), 1, maxNumWefts)),
-				numWarps        = parseInt(lerp(getRandomNumber(), 1, maxNumWarps)),
-				threadWidth     = parseInt(lerp(getRandomNumber(), 1, maxThreadWidth)),
-				threadSpacing   = parseInt(lerp(getRandomNumber(), 0, 0.5 * threadWidth)),
-				patternWidth    = parseInt(lerp(getRandomNumber(), patternWidthMinMultiplier * numWefts, patternWidthMaxMultiplier * numWefts)),
-				colors          = generateRandomColorSet(getRandomNumber);
+			algorithms[Math.floor(getRandomNumber() * algorithms.length)](getRandomNumber);
+		}
+
+
+		var generateFromStringRandom = function(rand) {
+			let numWefts        = parseInt(lerp(rand(), 1, params.random.maxNumWefts)),
+				numWarps        = parseInt(lerp(rand(), 1, params.random.maxNumWarps)),
+				threadWidth     = parseInt(lerp(rand(), 1, params.random.maxThreadWidth)),
+				threadSpacing   = parseInt(lerp(rand(), 0, 0.5 * threadWidth)),
+				patternWidth    = parseInt(lerp(rand(), params.random.patternWidthMinMultiplier * numWefts, params.random.patternWidthMaxMultiplier * numWefts)),
+				colors          = generateRandomColorSet(rand);
 
 			threadWidthInput.value   = threadWidth;
 			threadSpacingInput.value = threadSpacing;
 			patternWidthInput.value  = patternWidth;
 
 			for (let i = 0; i < numWefts; i++) {
-				let newColor = colors[parseInt(lerp(getRandomNumber(), 0, colors.length - 1))];
+				let newColor = colors[parseInt(lerp(rand(), 0, colors.length - 1))];
 				addWeft(newColor);
 			}
 
 			for (let i = 0; i < numWarps; i++) {
-				let newColor         = colors[parseInt(lerp(getRandomNumber(), 0, colors.length - 1))],
-					patternLength    = parseInt(lerp(getRandomNumber(), patternLengthMin, patternLengthMax)),
-					perlinWavelength = Math.floor(patternWidth * lerp(getRandomNumber(), perlinWavelengthMinMultiplier, perlinWavelengthMaxMultiplier)),
-					patternPerlin    = perlin1D(getRandomNumber(), perlinWavelength),
+				let newColor         = colors[parseInt(lerp(rand(), 0, colors.length - 1))],
+					patternLength    = parseInt(lerp(rand(), params.random.patternLengthMin, params.random.patternLengthMax)),
+					perlinWavelength = Math.floor(patternWidth * lerp(rand(), params.random.perlinWavelengthMinMultiplier, params.random.perlinWavelengthMaxMultiplier)),
+					patternPerlin    = perlin1D(rand(), perlinWavelength),
 					newPattern       = '';
 
 				for (let n = 0; n < patternLength; n++) {
@@ -171,6 +189,37 @@
 			}
 		}
 
+		var generateFromStringLinear = function(rand) {
+			let numWefts        = Math.pow(2, parseInt(lerp(rand(), 1, 5))),
+				numWarps        = numWefts,
+				threadWidth     = 2 * numWefts,
+				threadSpacing   = numWefts * parseInt(lerp(rand(), 0.1, 0.2)),
+				patternWidth    = numWefts * parseInt(lerp(rand(), 1, 10)),
+				colors          = generateRandomColorSet(rand);
+
+			threadWidthInput.value   = threadWidth;
+			threadSpacingInput.value = threadSpacing;
+			patternWidthInput.value  = patternWidth;
+
+			for (let i = 0; i < numWefts; i++) {
+				let newColor = colors[parseInt(lerp(rand(), 0, colors.length - 1))];
+				addWeft(newColor);
+			}
+
+			for (let i = 0; i < numWarps; i++) {
+				let newColor         = colors[parseInt(lerp(rand(), 0, colors.length - 1))],
+					patternLength    = patternWidth * (1 - 0.5 * (Math.floor(rand() * 3) - 1)),
+					perlinWavelength = numWefts,
+					patternPerlin    = perlin1D(rand(), perlinWavelength),
+					newPattern       = '';
+
+				for (let n = 0; n < patternLength; n++) {
+					newPattern = newPattern + (patternPerlin() < 0.5 ? '0' : '1');
+				}
+
+				addWarp(newColor, newPattern);
+			}
+		}
 
 
 		/***************************************
@@ -370,7 +419,7 @@
 
 			var getNumWefts = function() {
 				let minWidth      = Math.floor(p.width / args.threadTotal),
-					maxWidth      = Math.ceil(minWidth / args.patternWidth) * args.patternWidth + Math.floor(0.5 * args.patternWidth);
+					maxWidth      = Math.ceil(minWidth / args.patternWidth) * args.patternWidth; // + Math.floor(0.5 * args.patternWidth);
 				return maxWidth;
 			}
 		}
@@ -393,7 +442,7 @@
         	return min + (max - min) * limit(n, 0, 1);
 		}
 
-		// seeded pseudo-random number generator
+		// seeded pseudo-random number generator MurmurHash2, non-uniform distributions
 		var xmur3 = function(seed) {
 			for (var i = 0, h = 1779033703 ^ seed.length; i < seed.length; i++) {
 				h = Math.imul(h ^ seed.charCodeAt(i), 3432918353);
@@ -404,8 +453,19 @@
 				h = Math.imul(h ^ h >>> 16, 2246822507);
 				h = Math.imul(h ^ h >>> 13, 3266489909);
 				h = (h ^= h >>> 16) >>> 0;
-				return h / Math.pow(10, h.toString().length);
+				return h;
 			}
+		}
+
+		// seeded pseudo-random number generator xoshiro128**, uniform distribution
+		var xoshiro128ss = function(a, b, c, d) {
+		    return function() {
+		        var t = b << 9, r = a * 5; r = (r << 7 | r >>> 25) * 9;
+		        c ^= a; d ^= b;
+		        b ^= c; a ^= d; c ^= t;
+		        d = d << 11 | d >>> 21;
+		        return (r >>> 0) / 4294967296;
+		    }
 		}
 
 		var perlin1D = function(seed, wavelength) {
