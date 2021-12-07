@@ -66,10 +66,10 @@
 					maxNumWefts:                    20,
 					maxNumWarps:                    20,
 					maxThreadWidth:                 20,
-					patternWidthMinMultiplier:      3,			// lower boundary for the pattern width, n * wefts number
-					patternWidthMaxMultiplier:      10,			// upper boundary for the pattern width, n * wefts number
-					perlinWavelengthMinMultiplier:  0.02,		// [0, 1[ lower boundary for the Perlin Noise wavelength for the warp length
-					perlinWavelengthMaxMultiplier:	0.20,		// ]0, 1] upper boundary for the Perlin Noise wavelength for the warp length
+					patternWidthMinMultiplier:      3,          // lower boundary for the pattern width, n * wefts number
+					patternWidthMaxMultiplier:      10,         // upper boundary for the pattern width, n * wefts number
+					perlinWavelengthMinMultiplier:  0.02,       // [0, 1[ lower boundary for the Perlin Noise wavelength for the warp length
+					perlinWavelengthMaxMultiplier:	0.20,       // ]0, 1] upper boundary for the Perlin Noise wavelength for the warp length
 					patternLengthMin:               4,
 					patternLengthMax:               50
 				},
@@ -87,19 +87,14 @@
 
 		var registerEvents = function() {
 			settingsToggle.addEventListener('click', toggleSettings);
-			addWeftBtn.addEventListener(    'click', addWeft);
-			removeWeftBtns.forEach(btn =>
-				btn.addEventListener(       'click', removeWeft)
-			);
-			addWarpBtn.addEventListener(    'click', addWarp);
-			removeWarpBtns.forEach(btn =>
-				btn.addEventListener(       'click', removeWarp)
-			);
-
-			generateBtn.addEventListener(   'click', resetLoom);
-			luckyBtn.addEventListener(      'click', luckyMode);
-			downloadBtn.addEventListener(   'click', saveFrame);
-			controls.addEventListener(     'submit', resetLoom);
+			addWeftBtn.addEventListener('click', addWeft);
+			removeWeftBtns.forEach(btn => btn.addEventListener('click', removeWeft));
+			addWarpBtn.addEventListener('click', addWarp);
+			removeWarpBtns.forEach(btn => btn.addEventListener('click', removeWarp));
+			generateBtn.addEventListener('click', resetLoom);
+			luckyBtn.addEventListener('click', luckyMode);
+			downloadBtn.addEventListener('click', saveFrame);
+			controls.addEventListener('submit', resetLoom);
 		}
 
 		var initLoom = function() {
