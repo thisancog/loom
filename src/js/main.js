@@ -61,25 +61,25 @@
 
 		// some fixed variables to tweak behaviour
 		var params = {
-				changeWarpDirections: 				false,
+				changeWarpDirections:               false,
 				random: {
-					maxNumWefts:					20,
-					maxNumWarps:					20,
-					maxThreadWidth: 				20,
-					patternWidthMinMultiplier: 		3,			// lower boundary for the pattern width, n * wefts number
-					patternWidthMaxMultiplier:		10,			// upper boundary for the pattern width, n * wefts number
-					perlinWavelengthMinMultiplier:	0.02,		// [0, 1[ lower boundary for the Perlin Noise wavelength for the warp length
+					maxNumWefts:                    20,
+					maxNumWarps:                    20,
+					maxThreadWidth:                 20,
+					patternWidthMinMultiplier:      3,			// lower boundary for the pattern width, n * wefts number
+					patternWidthMaxMultiplier:      10,			// upper boundary for the pattern width, n * wefts number
+					perlinWavelengthMinMultiplier:  0.02,		// [0, 1[ lower boundary for the Perlin Noise wavelength for the warp length
 					perlinWavelengthMaxMultiplier:	0.20,		// ]0, 1] upper boundary for the Perlin Noise wavelength for the warp length
-					patternLengthMin: 				4,
-					patternLengthMax:				50
+					patternLengthMin:               4,
+					patternLengthMax:               50
 				},
 				linear: {
-					numWeftsMinPower2:				1,
-					numWeftsMaxPower2:				5,
-					threadSpacingMinMultiplier:		0.1,
-					threadSpacingMaxMultiplier:		0.2,
-					patternWidthMinMultiplier:		1,
-					patternWidthMaxMultiplier:		10,
+					numWeftsMinPower2:              1,
+					numWeftsMaxPower2:              5,
+					threadSpacingMinMultiplier:     0.1,
+					threadSpacingMaxMultiplier:     0.2,
+					patternWidthMinMultiplier:      1,
+					patternWidthMaxMultiplier:      10,
 				}
 			};
 
